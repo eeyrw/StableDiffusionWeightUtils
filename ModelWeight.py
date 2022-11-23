@@ -118,7 +118,7 @@ def compareWeightDict(dict1, dict2, prefixGroupList=['model.diffusion_model','co
     dict2OnlyKeys = dict2KeysSet - commonKeys
     commonKeys = list(commonKeys)
     commonKeys.sort()
-    groupKeyNameDict = {'unknown': []}
+    groupKeyNameDict = {}
     for k in commonKeys:
         startWithKey = 'unknown'
         for groupKey in prefixGroupList:
