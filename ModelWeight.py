@@ -84,7 +84,7 @@ def loadWeight(weightFilePath):
     return weightDict
 
 
-def compareWeightTenosr(tensor1, tensor2, eps=1e-4):
+def compareWeightTenosr(tensor1, tensor2, eps=1e-3):
     eqType = 'not equal'
     if tensor1.dtype==tensor2.dtype and torch.equal(tensor1, tensor2):
         eqType = 'strict equal'
@@ -92,12 +92,12 @@ def compareWeightTenosr(tensor1, tensor2, eps=1e-4):
         diff_max = 0
         diff_mean = 0
     else:
-        diff = torch.abs(tensor1-tensor2)
+        diff = torch.abs(tensor1-tensor2).to(torch.float32)
         diff_min = torch.min(diff)
         diff_max = torch.max(diff)
         diff_mean = torch.mean(diff)
         if diff_mean < eps:
-            eqType = 'lossen equal'
+            eqType = 'loosen equal'
 
     compareResultDict = OrderedDict()
     compareResultDict['eqType'] = eqType
@@ -113,7 +113,7 @@ def compareWeightTenosr(tensor1, tensor2, eps=1e-4):
 def compareWeightDict(dict1, dict2, prefixGroupList=['model.diffusion_model','cond_stage_model','first_stage_model','model_ema']):
     dict1KeysSet = set(dict1.keys())
     dict2KeysSet = set(dict2.keys())
-    commonKeys = dict1KeysSet and dict2KeysSet
+    commonKeys = dict1KeysSet & dict2KeysSet
     dict1OnlyKeys = dict1KeysSet - commonKeys
     dict2OnlyKeys = dict2KeysSet - commonKeys
     commonKeys = list(commonKeys)
@@ -236,8 +236,8 @@ def blendWeight(rawDict1, rawDict2):
 
 
 if __name__ == "__main__":
-    weight1Dict = loadWeight(r"D:\weight\Anything-V3.0-pruned.ckpt")
-    weight2Dict = loadWeight(r"D:\weight\Anything-V3.0.ckpt")
+    weight1Dict = loadWeight(r"F:\Anything-V3.0.ckpt")
+    weight2Dict = loadWeight(r"F:\2022-11-08T13-38-59_minimal-ram-single-gpu\checkpoints\zwx.ckpt")
     # newWeight = replaceVAE(weight1Dict,weight2Dict)
     # newWeight = blendWeight(weight1Dict,weight2Dict)
     # torch.save(newWeight,r'F:/Anything-hd-15.ckpt')
