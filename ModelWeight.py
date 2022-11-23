@@ -129,19 +129,19 @@ def compareWeightDict(dict1, dict2, prefixGroupList=['model.diffusion_model','co
             startWithKey, []).append(k)
 
     groupResultListDict = {}
-    with open('compare_result.txt', 'w') as f:
-        for groudKey, actualKeyList in groupKeyNameDict.items():
-            fields = None
-            for key in actualKeyList:
-                resultDict = compareWeightTenosr(dict1[key],dict2[key])
-                outputList = [key[len(groudKey):] if groudKey!='unknown' else key] + [value for field,value in resultDict.items()]
-                if not fields:
-                    fields = ['Key']+[field for field,value in resultDict.items()]
-                groupResultListDict.setdefault(
-                    groudKey, [fields]).append(outputList)
-            table = AsciiTable(groupResultListDict[groudKey])
-            table.inner_row_border = True
-            table.title = groudKey
+    for groudKey, actualKeyList in groupKeyNameDict.items():
+        fields = None
+        for key in actualKeyList:
+            resultDict = compareWeightTenosr(dict1[key],dict2[key])
+            outputList = [key[len(groudKey):] if groudKey!='unknown' else key] + [value for field,value in resultDict.items()]
+            if not fields:
+                fields = ['Key']+[field for field,value in resultDict.items()]
+            groupResultListDict.setdefault(
+                groudKey, [fields]).append(outputList)
+        table = AsciiTable(groupResultListDict[groudKey])
+        table.inner_row_border = True
+        table.title = groudKey
+        with open(groudKey+'.compare_result.txt', 'w') as f:
             f.write(table.table)
             f.write('\n')
 
